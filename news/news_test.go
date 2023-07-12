@@ -23,3 +23,12 @@ func TestNewsAPI_Hours24(t *testing.T) {
 	data := model.Common{Key: ``}
 	newsAPI.Hours24(&data)
 }
+
+func TestNewsAPI_HotNews360(t *testing.T) {
+	data := model.Common{Key: ``}
+	resp, err := newsAPI.Kwai(&data)
+	if err != nil {
+		t.Error("err -->", err)
+	}
+	fmt.Println(resp)
+}
