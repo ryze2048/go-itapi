@@ -6,29 +6,54 @@ import (
 	"testing"
 )
 
-var newsAPI = NewsAPI{}
+func TestNewsAPI_Unify(t *testing.T) {
+	var client = new(NewsAPI)
+	data := &model.UnifyNews{
+		Common:     model.Common{Key: ``},
+		RequestUrl: model.ZhihuUrl,
+	}
+	info, err := client.Unify(data)
+	if err != nil {
+		panic(err)
+	}
 
-func TestNews(t *testing.T) {
-	data := model.GeneralNewsRequest{
+	fmt.Println(string(info))
+	var res model.ZhihuResponse
+	err = client.Unmarshal(info, &res)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(res)
+
+}
+
+func TestNewsAPI_All(t *testing.T) {
+	var client = new(NewsAPI)
+
+	allRequest := model.AllRequest{
 		Common: model.Common{Key: ``},
+		Type:   "baidu",
 	}
-	s, err := newsAPI.GeneralNews(&data)
+
+	res, err := client.All(&allRequest)
 	if err != nil {
-		t.Errorf("err --> %v", err)
+		t.Error("err --> ", err)
 	}
-	fmt.Println(s)
+	fmt.Println(res)
 }
 
-func TestNewsAPI_Hours24(t *testing.T) {
-	data := model.Common{Key: ``}
-	newsAPI.Hours24(&data)
-}
+func TestNewsAPI_GeneralNews(t *testing.T) {
+	var client = new(NewsAPI)
+	data := &model.GeneralNewsRequest{
+		Common: model.Common{Key: ``},
+		Type:   "baidu",
+		Num:    "1",
+		Page:   "20",
+	}
 
-func TestNewsAPI_HotNews360(t *testing.T) {
-	data := model.Common{Key: ``}
-	resp, err := newsAPI.Kwai(&data)
+	resp, err := client.GeneralNews(data)
 	if err != nil {
-		t.Error("err -->", err)
+		panic(err)
 	}
 	fmt.Println(resp)
 }
